@@ -1,0 +1,624 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Nourish Skin Company — Skin Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage: #7A8C6E;
+    --sage-light: #A3B394;
+    --sage-pale: #EEF2EB;
+    --cream: #FAF8F4;
+    --warm-white: #FDFCF9;
+    --stone: #8A8278;
+    --charcoal: #2D2A26;
+    --blush: #E8DDD4;
+    --border: rgba(122,140,110,0.2);
+    --border-light: rgba(122,140,110,0.12);
+  }
+  html, body { height: 100%; height: -webkit-fill-available; background: var(--cream); font-family: 'DM Sans', sans-serif; color: var(--charcoal); overflow: hidden; }
+  .screen { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.8s ease, transform 0.8s ease; padding: 20px; }
+  .screen.hidden { opacity: 0; pointer-events: none; transform: translateY(16px); }
+
+  /* WELCOME */
+  #welcome { background: var(--cream); text-align: center; overflow-y: auto; justify-content: flex-start; padding: 0; }
+
+  .w-hero { display: flex; flex-direction: column; align-items: center; padding: clamp(40px, 10vw, 64px) 24px clamp(32px, 8vw, 48px); border-bottom: 1px solid var(--border); width: 100%; background: var(--warm-white); }
+  .w-leaf { font-size: 28px; margin-bottom: 16px; }
+  .w-brand { font-family: 'Cormorant Garamond', serif; font-size: clamp(11px, 2.8vw, 13px); letter-spacing: 0.3em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
+  .w-logo { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 7.5vw, 44px); font-weight: 300; color: var(--charcoal); line-height: 1.2; margin-bottom: clamp(20px, 5vw, 32px); }
+  .w-logo em { color: var(--sage); font-style: italic; }
+  .w-headline { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 6vw, 36px); font-weight: 300; font-style: italic; color: var(--charcoal); max-width: 480px; line-height: 1.5; padding: 0 8px; }
+  .w-subhead { font-size: clamp(13px, 3.2vw, 15px); color: var(--stone); margin-top: 14px; max-width: 380px; line-height: 1.85; padding: 0 8px; }
+
+  .w-cta-block { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: clamp(24px, 6vw, 36px); width: 100%; max-width: 280px; }
+  .begin-btn { width: 100%; padding: 16px; background: var(--sage); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: clamp(11px, 2.8vw, 12px); letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; transition: all 0.4s ease; font-weight: 500; border-radius: 2px; }
+  .begin-btn:hover, .begin-btn:active { background: var(--sage-light); }
+  .w-book-link { font-size: clamp(10px, 2.5vw, 11px); color: var(--stone); letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border: none; background: none; transition: color 0.3s; }
+  .w-book-link:hover { color: var(--sage); }
+
+  /* MORGAN SECTION */
+  .w-morgan { width: 100%; padding: clamp(28px, 7vw, 44px) 24px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; background: var(--sage-pale); }
+  .w-morgan-inner { max-width: 480px; width: 100%; display: flex; gap: 20px; align-items: flex-start; }
+  .w-morgan-avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--sage); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Cormorant Garamond', serif; font-size: 22px; color: white; font-style: italic; }
+  .w-morgan-content { flex: 1; }
+  .w-morgan-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(16px, 4vw, 19px); font-weight: 400; color: var(--charcoal); margin-bottom: 4px; }
+  .w-morgan-title { font-size: clamp(10px, 2.5vw, 11px); letter-spacing: 0.2em; text-transform: uppercase; color: var(--sage); margin-bottom: 10px; }
+  .w-morgan-quote { font-family: 'Cormorant Garamond', serif; font-size: clamp(14px, 3.5vw, 16px); font-style: italic; color: var(--charcoal); line-height: 1.7; }
+
+  /* SERVICES */
+  .w-services { width: 100%; padding: clamp(28px, 7vw, 44px) 24px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; }
+  .w-services-label { font-size: clamp(9px, 2.2vw, 10px); letter-spacing: 0.5em; text-transform: uppercase; color: var(--sage); margin-bottom: 20px; }
+  .w-services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 480px; width: 100%; }
+  .w-service-item { background: var(--warm-white); padding: 14px 16px; border: 1px solid var(--border-light); border-radius: 2px; text-align: left; }
+  .w-service-name { font-family: 'Cormorant Garamond', serif; font-size: clamp(13px, 3.2vw, 15px); font-weight: 400; color: var(--charcoal); margin-bottom: 3px; }
+  .w-service-desc { font-size: clamp(10px, 2.5vw, 11px); color: var(--stone); line-height: 1.5; }
+
+  /* HOW IT WORKS */
+  .w-how { width: 100%; padding: clamp(28px, 7vw, 44px) 24px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; }
+  .w-how-label { font-size: clamp(9px, 2.2vw, 10px); letter-spacing: 0.5em; text-transform: uppercase; color: var(--sage); margin-bottom: 20px; }
+  .w-how-steps { display: flex; flex-direction: column; gap: 0; max-width: 480px; width: 100%; }
+  .w-how-step { display: flex; align-items: flex-start; gap: 16px; padding: clamp(14px, 3.5vw, 20px) 0; border-bottom: 1px solid var(--border-light); }
+  .w-how-step:last-child { border-bottom: none; }
+  .w-how-num { width: 28px; height: 28px; border-radius: 50%; background: var(--sage-pale); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--sage); font-weight: 500; flex-shrink: 0; margin-top: 2px; }
+  .w-how-content { flex: 1; }
+  .w-how-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(15px, 3.8vw, 17px); font-weight: 400; color: var(--charcoal); margin-bottom: 4px; }
+  .w-how-body { font-size: clamp(12px, 3vw, 13px); color: var(--stone); line-height: 1.7; }
+
+  /* FOOTER */
+  .w-footer { width: 100%; padding: clamp(24px, 6vw, 36px) 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: var(--warm-white); }
+  .disclaimer { font-size: clamp(10px, 2.5vw, 11px); color: var(--stone); opacity: 0.6; max-width: 90vw; text-align: center; line-height: 1.7; }
+
+  /* CHAT */
+  #chat { background: var(--warm-white); flex-direction: column; padding: 0; overflow: hidden; }
+  .chat-header { width: 100%; padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: white; flex-shrink: 0; }
+  .chat-logo { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 400; color: var(--charcoal); letter-spacing: 0.05em; }
+  .chat-logo span { color: var(--sage); font-style: italic; }
+  .chat-badge { font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone); border: 1px solid var(--border); padding: 2px 6px; border-radius: 2px; display: none; }
+  @media (min-width: 480px) { .chat-badge { display: block; } }
+  .chat-progress { margin-left: auto; display: flex; gap: 5px; align-items: center; }
+  .progress-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border); transition: background 0.4s; }
+  .progress-dot.done { background: var(--sage); }
+  .chat-messages { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; color: var(--charcoal); -webkit-overflow-scrolling: touch; }
+  .chat-messages::-webkit-scrollbar { width: 3px; }
+  .chat-messages::-webkit-scrollbar-thumb { background: var(--sage-light); }
+  .msg { display: flex; gap: 10px; animation: fadeUp 0.5s ease forwards; opacity: 0; max-width: 100%; }
+  .msg.user { align-self: flex-end; flex-direction: row-reverse; }
+  .msg-avatar { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 14px; }
+  .ai-avatar { background: var(--sage); color: white; font-style: italic; }
+  .user-avatar { background: var(--blush); color: var(--charcoal); font-size: 10px; font-family: 'DM Sans', sans-serif; }
+  .msg-bubble { padding: 12px 15px; font-size: clamp(14px, 3.5vw, 15px); line-height: 1.75; max-width: calc(100vw - 90px); }
+  .ai .msg-bubble { background: white; color: var(--charcoal); border: 1px solid rgba(0,0,0,0.06); border-radius: 0 12px 12px 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); }
+  .user .msg-bubble { background: var(--sage); color: white; border-radius: 12px 0 12px 12px; }
+  .typing-wrap { display: flex; gap: 10px; animation: fadeUp 0.4s ease forwards; opacity: 0; }
+  .typing { display: flex; gap: 5px; align-items: center; padding: 12px 15px; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 0 12px 12px 12px; }
+  .typing-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--sage); animation: bounce 1.2s infinite; }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; } .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  .action-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; padding-left: 40px; animation: fadeUp 0.5s ease forwards; opacity: 0; }
+  .action-btn { padding: 10px 16px; border: 1px solid var(--sage); background: transparent; color: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: clamp(10px, 2.5vw, 11px); letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px; }
+  .action-btn:hover, .action-btn:active { background: var(--sage); color: white; }
+  .chat-input-area { padding: 12px 16px; border-top: 1px solid var(--border); background: white; flex-shrink: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  .chat-input-wrap { display: flex; gap: 8px; align-items: flex-end; max-width: 700px; margin: 0 auto; }
+  .chat-input { flex: 1; padding: 11px 14px; border: 1px solid var(--border); background: var(--cream); color: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; resize: none; min-height: 44px; max-height: 100px; border-radius: 4px; transition: border 0.3s; -webkit-appearance: none; }
+  .chat-input:focus { border-color: var(--sage); }
+  .chat-input::placeholder { color: var(--stone); }
+  .send-btn { padding: 11px 18px; background: var(--sage); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 4px; flex-shrink: 0; height: 44px; -webkit-appearance: none; }
+  .send-btn:hover, .send-btn:active { background: var(--sage-light); }
+  .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* GENERATING */
+  #generating { background: var(--cream); text-align: center; }
+  .gen-logo { font-family: 'Cormorant Garamond', serif; font-size: clamp(16px, 4vw, 22px); font-weight: 300; letter-spacing: 0.15em; color: var(--charcoal); margin-bottom: 4px; animation: pulse 3s ease-in-out infinite; }
+  .gen-logo-sub { font-size: 9px; letter-spacing: 0.4em; color: var(--stone); text-transform: uppercase; margin-bottom: 44px; }
+  .gen-orbs { display: flex; gap: 8px; justify-content: center; margin-bottom: 32px; }
+  .gen-orb { width: 7px; height: 7px; border-radius: 50%; background: var(--sage); opacity: 0.3; animation: orbPulse 1.8s ease-in-out infinite; }
+  .gen-orb:nth-child(2) { animation-delay: 0.3s; } .gen-orb:nth-child(3) { animation-delay: 0.6s; } .gen-orb:nth-child(4) { animation-delay: 0.9s; } .gen-orb:nth-child(5) { animation-delay: 1.2s; }
+  .gen-bar-wrap { width: 180px; height: 1px; background: rgba(122,140,110,0.2); margin: 0 auto 24px; overflow: hidden; }
+  .gen-bar { height: 100%; background: linear-gradient(to right, transparent, var(--sage), transparent); animation: shimmer 2s ease-in-out infinite; width: 60%; }
+  .gen-status { font-size: clamp(13px, 3.2vw, 15px); color: var(--stone); font-style: italic; font-family: 'Cormorant Garamond', serif; min-height: 26px; transition: opacity 0.6s ease; }
+  .gen-status.fade { opacity: 0; }
+  .gen-steps { display: flex; flex-direction: column; gap: 8px; margin-top: 28px; }
+  .gen-step { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone); opacity: 0; transition: opacity 0.8s ease; display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .gen-step.visible { opacity: 0.5; } .gen-step.done { opacity: 1; color: var(--sage); }
+  .gen-step-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  /* EMAIL CAPTURE */
+  #email-capture { background: var(--cream); text-align: center; }
+  .email-box { background: white; border: 1px solid var(--border); padding: 36px 28px; max-width: 400px; width: 100%; border-radius: 4px; }
+  .email-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 5.5vw, 28px); font-weight: 300; color: var(--charcoal); margin-bottom: 10px; }
+  .email-sub { font-size: clamp(13px, 3.2vw, 14px); color: var(--stone); margin-bottom: 8px; line-height: 1.7; }
+  .email-ready-badge { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--sage); margin-bottom: 22px; display: block; }
+  .email-input { width: 100%; padding: 13px 14px; background: var(--cream); border: 1px solid var(--border); color: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px; transition: border 0.3s; -webkit-appearance: none; border-radius: 2px; }
+  .email-input:focus { border-color: var(--sage); }
+  .email-input::placeholder { color: var(--stone); }
+  .email-send-btn { width: 100%; padding: 15px; background: var(--sage); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; -webkit-appearance: none; border-radius: 2px; font-weight: 500; }
+  .email-send-btn:active { background: var(--sage-light); }
+  .email-spam-note { font-size: 11px; color: var(--stone); margin-top: 12px; line-height: 1.6; opacity: 0.8; }
+  .email-error { font-size: 12px; color: #e07070; margin-top: 8px; min-height: 18px; }
+  .email-success { font-size: 13px; color: #7CB987; margin-top: 12px; line-height: 1.6; }
+
+  /* REPORT */
+  #report { background: var(--cream); flex-direction: column; overflow: hidden; padding: 0; }
+  .report-header { width: 100%; padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: white; flex-shrink: 0; }
+  .report-logo { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: var(--charcoal); letter-spacing: 0.05em; }
+  .report-logo span { color: var(--sage); font-style: italic; }
+  .report-meta { margin-left: auto; text-align: right; }
+  .report-meta-label { font-size: 8px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--stone); }
+  .report-meta-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--charcoal); }
+  .report-blur-wrap { position: relative; flex: 1; overflow: hidden; }
+  .report-body { height: 100%; overflow-y: auto; padding: 24px 20px; color: var(--charcoal); -webkit-overflow-scrolling: touch; transition: filter 0.6s ease; }
+  .report-body.blurred { filter: blur(7px); pointer-events: none; user-select: none; }
+  .report-body::-webkit-scrollbar { width: 3px; }
+  .report-body::-webkit-scrollbar-thumb { background: var(--sage-light); }
+  .report-unlock-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 10; background: rgba(250,248,244,0.8); backdrop-filter: blur(4px); }
+  .report-unlock-box { background: white; border: 1px solid var(--border); padding: 32px 24px; max-width: 380px; width: 100%; text-align: center; border-radius: 4px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+  .report-unlock-eyebrow { font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--sage); margin-bottom: 12px; }
+  .report-unlock-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(20px, 5vw, 24px); font-weight: 300; color: var(--charcoal); margin-bottom: 8px; line-height: 1.3; }
+  .report-unlock-sub { font-size: clamp(12px, 3vw, 13px); color: var(--stone); line-height: 1.7; margin-bottom: 20px; }
+  .report-unlock-input { width: 100%; padding: 12px 14px; background: var(--cream); border: 1px solid var(--border); color: var(--charcoal); font-family: 'DM Sans', sans-serif; font-size: 16px; outline: none; margin-bottom: 10px; transition: border 0.3s; -webkit-appearance: none; border-radius: 2px; }
+  .report-unlock-input:focus { border-color: var(--sage); }
+  .report-unlock-input::placeholder { color: var(--stone); }
+  .report-unlock-btn { width: 100%; padding: 14px; background: var(--sage); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; -webkit-appearance: none; border-radius: 2px; font-weight: 500; }
+  .report-unlock-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .report-unlock-spam { font-size: 11px; color: var(--stone); margin-top: 12px; line-height: 1.6; }
+  .report-unlock-error { font-size: 12px; color: #e07070; margin-top: 8px; min-height: 16px; }
+  .report-unlock-success { font-size: 13px; color: #7CB987; margin-top: 10px; line-height: 1.6; }
+  .report-book-prompt { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .report-book-btn { display: inline-block; padding: 11px 24px; background: transparent; border: 1px solid var(--sage); color: var(--sage); font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; text-decoration: none; border-radius: 2px; }
+  .report-book-btn:hover { background: var(--sage); color: white; }
+  .report-inner { max-width: 720px; margin: 0 auto; }
+  .report-hero { text-align: center; padding: 16px 0 22px; border-bottom: 1px solid var(--border); margin-bottom: 22px; }
+  .report-hero-eyebrow { font-size: 9px; letter-spacing: 0.45em; text-transform: uppercase; color: var(--sage); margin-bottom: 8px; }
+  .report-hero-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(22px, 5.5vw, 36px); font-weight: 300; color: var(--charcoal); line-height: 1.3; }
+  .report-hero-sub { font-size: clamp(12px, 3vw, 13px); color: var(--stone); margin-top: 6px; }
+  .section-body { font-size: clamp(14px, 3.5vw, 15px); line-height: 1.9; color: var(--charcoal); }
+  .section-body p { margin-bottom: 12px; } .section-body ul { padding-left: 18px; } .section-body li { margin-bottom: 8px; } .section-body strong { font-weight: 500; }
+  .section-body h3 { font-family: 'Cormorant Garamond', serif; font-size: clamp(17px, 4.5vw, 20px); font-weight: 400; margin: 18px 0 8px; color: var(--charcoal); }
+  .section-body a { color: var(--sage); text-decoration: underline; }
+  .report-footer { text-align: center; padding: 22px 0 8px; border-top: 1px solid var(--border); margin-top: 16px; }
+  .report-footer-text { font-size: 10px; color: var(--stone); line-height: 1.7; max-width: 500px; margin: 0 auto; }
+  .report-actions { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .book-now-btn { padding: 12px 28px; background: var(--sage); color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; font-weight: 500; border-radius: 2px; }
+  .book-now-btn:hover { background: var(--sage-light); }
+  .restart-btn { padding: 12px 24px; background: transparent; border: 1px solid var(--border); color: var(--stone); font-family: 'DM Sans', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; border-radius: 2px; }
+  .restart-btn:active { border-color: var(--sage); color: var(--sage); }
+
+  @keyframes fadeUp { from { opacity: 0.01; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+  @keyframes orbPulse { 0%, 100% { opacity: 0.2; transform: scale(1); } 50% { opacity: 0.8; transform: scale(1.3); } }
+  @keyframes shimmer { 0% { transform: translateX(-200%); } 100% { transform: translateX(400%); } }
+</style>
+</head>
+<body>
+
+<!-- WELCOME -->
+<div class="screen" id="welcome">
+
+  <div class="w-hero">
+    <div class="w-leaf">🌿</div>
+    <div class="w-brand">The Nourish Skin Company</div>
+    <div class="w-logo">Your Skin, <em>Understood.</em></div>
+    <div class="w-headline">Let's find the treatment that's made for your skin — before you ever walk in.</div>
+    <div class="w-subhead">Answer a few questions about your skin and goals. Morgan's AI concierge will build a personalized treatment plan matched to Nourish's services.</div>
+    <div class="w-cta-block">
+      <button class="begin-btn" onclick="startChat()">Begin My Skin Assessment</button>
+      <button class="w-book-link" onclick="window.open('https://morgansylvia.glossgenius.com/services','_blank')">Book directly with Morgan →</button>
+    </div>
+  </div>
+
+  <div class="w-morgan">
+    <div class="w-morgan-inner">
+      <div class="w-morgan-avatar">M</div>
+      <div class="w-morgan-content">
+        <div class="w-morgan-name">Morgan Sholley</div>
+        <div class="w-morgan-title">Licensed Esthetician · 20+ Years · Cary, NC</div>
+        <div class="w-morgan-quote">"Skincare is a relationship. I take time to understand your concerns, your history, and your goals — so your treatment plan is uniquely yours."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-services">
+    <div class="w-services-label">Our Services</div>
+    <div class="w-services-grid">
+      <div class="w-service-item"><div class="w-service-name">Facials</div><div class="w-service-desc">Hydroglow, Microdermabrasion, Dermaplane</div></div>
+      <div class="w-service-item"><div class="w-service-name">Peels</div><div class="w-service-desc">Acne peel, RDS1, chemical exfoliation</div></div>
+      <div class="w-service-item"><div class="w-service-name">Aerolase</div><div class="w-service-desc">Laser for acne, rosacea, pigmentation</div></div>
+      <div class="w-service-item"><div class="w-service-name">SkinPen</div><div class="w-service-desc">Microneedling for texture and tone</div></div>
+    </div>
+  </div>
+
+  <div class="w-how">
+    <div class="w-how-label">How It Works</div>
+    <div class="w-how-steps">
+      <div class="w-how-step">
+        <div class="w-how-num">1</div>
+        <div class="w-how-content">
+          <div class="w-how-title">Share your skin story</div>
+          <div class="w-how-body">A warm, conversational assessment — your concerns, history, sensitivities, and goals. About 8 minutes.</div>
+        </div>
+      </div>
+      <div class="w-how-step">
+        <div class="w-how-num">2</div>
+        <div class="w-how-content">
+          <div class="w-how-title">Get your personalized plan</div>
+          <div class="w-how-body">A complete treatment recommendation matched specifically to Nourish's services and your skin profile.</div>
+        </div>
+      </div>
+      <div class="w-how-step">
+        <div class="w-how-num">3</div>
+        <div class="w-how-content">
+          <div class="w-how-title">Arrive ready</div>
+          <div class="w-how-body">Your plan is emailed to you — and Morgan has your full profile before you walk in the door.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-footer">
+    <button class="begin-btn" style="max-width:280px;width:100%;" onclick="startChat()">Begin My Skin Assessment</button>
+    <div class="disclaimer">This assessment is for informational purposes only. All treatment decisions are made by Morgan in consultation with you. Located at 1240 SE Maynard Rd, Suite 102, Cary NC · (919) 740-9799</div>
+  </div>
+</div>
+
+<!-- CHAT -->
+<div class="screen hidden" id="chat">
+  <div class="chat-header">
+    <div style="font-size:16px;">🌿</div>
+    <div class="chat-logo">Nourish <span>Skin</span></div>
+    <div class="chat-badge">Skin Intelligence</div>
+    <div class="chat-progress" id="progressDots">
+      <div class="progress-dot" id="d1"></div><div class="progress-dot" id="d2"></div><div class="progress-dot" id="d3"></div>
+      <div class="progress-dot" id="d4"></div><div class="progress-dot" id="d5"></div><div class="progress-dot" id="d6"></div>
+    </div>
+  </div>
+  <div class="chat-messages" id="messages"></div>
+  <div class="chat-input-area">
+    <div class="chat-input-wrap">
+      <textarea class="chat-input" id="userInput" placeholder="Share your thoughts..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>
+
+<!-- GENERATING -->
+<div class="screen hidden" id="generating">
+  <div class="w-leaf" style="font-size:32px;margin-bottom:16px;">🌿</div>
+  <div class="gen-logo">The Nourish Skin Company</div>
+  <div class="gen-logo-sub">Building Your Treatment Plan</div>
+  <div class="gen-orbs">
+    <div class="gen-orb"></div><div class="gen-orb"></div><div class="gen-orb"></div><div class="gen-orb"></div><div class="gen-orb"></div>
+  </div>
+  <div class="gen-bar-wrap"><div class="gen-bar"></div></div>
+  <div class="gen-status" id="genStatus">Reading your skin story...</div>
+  <div class="gen-steps">
+    <div class="gen-step" id="step1"><div class="gen-step-dot"></div>Skin profile analysis</div>
+    <div class="gen-step" id="step2"><div class="gen-step-dot"></div>Lifestyle assessment</div>
+    <div class="gen-step" id="step3"><div class="gen-step-dot"></div>Treatment matching</div>
+    <div class="gen-step" id="step4"><div class="gen-step-dot"></div>Personalizing recommendations</div>
+    <div class="gen-step" id="step5"><div class="gen-step-dot"></div>Composing your plan</div>
+  </div>
+</div>
+
+<!-- EMAIL CAPTURE -->
+<div class="screen hidden" id="email-capture">
+  <div class="email-box">
+    <div class="email-title">Your Treatment Plan Is Ready</div>
+    <div class="email-sub">Enter your email and we'll send your personalized Nourish Skin treatment plan — and share it with Morgan before your visit.</div>
+    <span class="email-ready-badge">✦ Ready to send</span>
+    <input class="email-input" id="emailCaptureInput" type="email" placeholder="Your email address" autocomplete="email" />
+    <div class="email-error" id="emailError"></div>
+    <div class="email-success" id="emailSuccess"></div>
+    <button class="email-send-btn" onclick="sendReportEmail()">Send My Treatment Plan</button>
+    <div class="email-spam-note">Don't forget to check your spam folder if you don't see it within a few minutes.</div>
+  </div>
+</div>
+
+<!-- REPORT -->
+<div class="screen hidden" id="report">
+  <div class="report-header">
+    <div style="font-size:14px;">🌿</div>
+    <div class="report-logo">Nourish <span>Skin</span></div>
+    <div class="report-meta">
+      <div class="report-meta-label">Skin Intelligence Report</div>
+      <div class="report-meta-name" id="reportName"></div>
+    </div>
+  </div>
+  <div class="report-blur-wrap">
+    <div class="report-unlock-overlay" id="reportUnlockOverlay">
+      <div class="report-unlock-box">
+        <div class="report-unlock-eyebrow">✦ Your plan is ready</div>
+        <div class="report-unlock-title">Send it to your inbox</div>
+        <div class="report-unlock-sub">We'll email your personalized Nourish Skin treatment plan instantly — and Morgan will have it before your visit.</div>
+        <input class="report-unlock-input" id="reportUnlockEmail" type="email" placeholder="Your email address" autocomplete="email" />
+        <div class="report-unlock-error" id="reportUnlockError"></div>
+        <div class="report-unlock-success" id="reportUnlockSuccess"></div>
+        <button class="report-unlock-btn" id="reportUnlockBtn" onclick="sendFromOverlay()">Send My Treatment Plan</button>
+        <div class="report-unlock-spam">Check your spam folder if it doesn't arrive within a few minutes.</div>
+        <div class="report-book-prompt">
+          <a class="report-book-btn" href="https://morgansylvia.glossgenius.com/services" target="_blank">Book with Morgan →</a>
+        </div>
+      </div>
+    </div>
+    <div class="report-body blurred" id="reportBody">
+      <div class="report-inner">
+        <div class="report-hero">
+          <div class="report-hero-eyebrow">Your Personalized Treatment Plan</div>
+          <div class="report-hero-title" id="reportTitle"></div>
+          <div class="report-hero-sub" id="reportSub"></div>
+        </div>
+        <div id="reportContent"></div>
+        <div class="report-footer">
+          <div class="report-footer-text">This assessment was generated for informational purposes only. All treatment recommendations should be reviewed with Morgan at The Nourish Skin Company. 1240 SE Maynard Rd, Suite 102, Cary NC 27511 · (919) 740-9799</div>
+          <div class="report-actions">
+            <button class="book-now-btn" onclick="window.open('https://morgansylvia.glossgenius.com/services','_blank')">Book with Morgan</button>
+            <button class="restart-btn" onclick="restart()">Start Over</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SYSTEM_PROMPT = `You are the Nourish Skin Intelligence Concierge — a warm, knowledgeable skin assessment guide for The Nourish Skin Company in Cary, NC, founded and led by licensed esthetician Morgan Sholley with over 20 years of experience.
+
+Your role is to conduct a warm, approachable, conversational skin assessment and produce a personalized treatment plan matched to Nourish's service menu. You embody Morgan's philosophy: skincare is a relationship, every face is unique, and your job is to make people feel welcomed, understood, and never intimidated.
+
+NOURISH SKIN SERVICE MENU (recommend from this list only):
+
+FACIALS:
+- Hydroglow Facial — advanced multi-step: hydrodermabrasion + chemical peel + oxygen therapy + cryotherapy. Best for dullness, fine lines, congestion, hydration. Immediate results, no downtime.
+- Microdermabrasion Facial ($170) — crystal-based exfoliation. Best for fine lines, post-acne pigmentation, sun damage, texture, uneven tone. Add-ons: Enzyme ($20), Vitamin A ($40), Cupping ($20), Cryotherapy ($20)
+- Dermaplane Facial ($170) — surgical blade exfoliation + peach fuzz removal. Best for texture, dullness, collagen, makeup application. Add-ons: Enzyme ($20), Vitamin A ($40), Cupping ($20), Cryotherapy ($20)
+
+PEELS:
+- Acne Peel — targeted for active breakouts and congestion
+- RDS1 Peel — resurfacing peel for texture, tone, and pigmentation
+- Chemical Peel Add-ons to Dermaplane ($40)
+
+AEROLASE (Laser):
+- Aerolase Neo — laser treatment for acne, rosacea, redness, pigmentation, melasma, skin rejuvenation. No downtime. Safe for all skin tones.
+
+SKINPEN (Microneedling):
+- SkinPen Microneedling — collagen induction therapy for texture, tone, scars, fine lines, pores. Series recommended for best results.
+
+ADD-ONS (available with facials):
+- Enzyme treatment ($20)
+- Vitamin A treatment ($40)  
+- Cupping ($20)
+- Cryotherapy ($20)
+
+PRODUCT PARTNERS: Epicutis, Anfisa, Face Reality, Plated, SkinPen, Colorescience
+
+NEW CLIENT NOTE: All new clients begin with a First-Time Consultation Treatment so Morgan can assess skin in person before recommending a treatment plan.
+
+CONSULTATION FLOW — ask ONE question at a time, warmly:
+
+Opening message (say this exactly):
+"Hi there! I'm so glad you're here.
+
+Morgan built this assessment so she can get to know your skin before you even walk in the door — meaning your very first appointment starts at a completely different level.
+
+Let's take a few minutes to understand your skin together. I promise it'll feel more like a conversation than a questionnaire.
+
+To start — what's your name?"
+
+Question 1: Name (asked in opening)
+Question 2: Age range — 20s, 30s, 40s, 50s, or 60+
+Question 3: What brings them in today? What's their biggest skin concern?
+Question 4: How long have they been dealing with this concern? Have they tried any treatments before?
+Question 5: Tell me about their current skincare routine — what do they use morning and night?
+Question 6: Any skin sensitivities, allergies, or ingredients that have caused reactions?
+Question 7: How would they describe their skin type day-to-day — oily, dry, combination, sensitive, normal?
+Question 8: Are they currently using any prescription skincare (like tretinoin, antibiotics, or topical steroids)?
+Question 9: What's their goal — what would make them feel like this was absolutely worth it?
+
+After Question 9: Give a warm personal closing that sounds like Morgan, then write exactly: REPORT_READY
+
+REPORT FORMAT: HTML only using h3, p, ul, li, strong tags. Warm, personal, approachable tone — sounds like Morgan wrote it. Structure as:
+1. Your Skin Story — a warm summary of what they shared
+2. What's Working — validate anything positive in their current routine
+3. Our Recommended Starting Point — the ONE Nourish service to begin with and exactly why
+4. Your Full Treatment Plan — 2-4 recommended services from the Nourish menu with explanation
+5. Home Care Notes — brief guidance on what to look for in their routine given what they shared
+6. Your Next Step — warm CTA to book with Morgan: morgansylvia.glossgenius.com or call (919) 740-9799
+
+CRITICAL RULES:
+- One question at a time — warm and conversational, never clinical
+- Only recommend from the Nourish service menu
+- Never make medical claims or diagnoses
+- Sound like a caring, knowledgeable friend — not a chatbot
+- Reflect Morgan's approachable, results-driven philosophy throughout`;
+
+  let conversationHistory = [];
+  let userName = '';
+  let questionCount = 0;
+  let isWaiting = false;
+  let reportHTML = '';
+  let generatingInterval = null;
+
+  const genMessages = ['Reading your skin story...','Getting to know your concerns...','Matching to Nourish treatments...','Personalizing your recommendations...','Composing your treatment plan...'];
+  const genStepTimings = [0, 4000, 8000, 13000, 18000];
+
+  function startGeneratingAnimation() {
+    let msgIndex = 0;
+    const statusEl = document.getElementById('genStatus');
+    const steps = ['step1','step2','step3','step4','step5'];
+    steps.forEach(s => { const el = document.getElementById(s); if (el) el.classList.remove('visible','done'); });
+    statusEl.textContent = genMessages[0];
+    generatingInterval = setInterval(() => {
+      statusEl.classList.add('fade');
+      setTimeout(() => { msgIndex = (msgIndex + 1) % genMessages.length; statusEl.textContent = genMessages[msgIndex]; statusEl.classList.remove('fade'); }, 600);
+    }, 3500);
+    genStepTimings.forEach((t, i) => {
+      setTimeout(() => {
+        const el = document.getElementById(steps[i]);
+        if (el) { if (i > 0) { const prev = document.getElementById(steps[i-1]); if (prev) prev.classList.add('done'); } el.classList.add('visible'); }
+      }, t);
+    });
+  }
+
+  function stopGeneratingAnimation() {
+    if (generatingInterval) { clearInterval(generatingInterval); generatingInterval = null; }
+    ['step1','step2','step3','step4','step5'].forEach(s => { const el = document.getElementById(s); if (el) el.classList.add('done'); });
+    const statusEl = document.getElementById('genStatus');
+    if (statusEl) { statusEl.classList.add('fade'); setTimeout(() => { statusEl.textContent = 'Your plan is ready.'; statusEl.classList.remove('fade'); }, 600); }
+  }
+
+  function show(id) { document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
+  function startChat() { show('chat'); setTimeout(() => sendAI('Begin the skin assessment.'), 400); }
+
+  function restart() {
+    conversationHistory = []; userName = ''; questionCount = 0; isWaiting = false; reportHTML = '';
+    if (generatingInterval) { clearInterval(generatingInterval); generatingInterval = null; }
+    document.getElementById('messages').innerHTML = '';
+    document.getElementById('reportUnlockOverlay').style.display = 'flex';
+    document.getElementById('reportUnlockEmail').value = '';
+    document.getElementById('reportUnlockError').textContent = '';
+    document.getElementById('reportUnlockSuccess').textContent = '';
+    document.getElementById('reportUnlockBtn').textContent = 'Send My Treatment Plan';
+    document.getElementById('reportUnlockBtn').disabled = false;
+    document.getElementById('reportBody').classList.add('blurred');
+    updateProgress(0); show('welcome');
+  }
+
+  function updateProgress(n) { for (let i = 1; i <= 6; i++) { document.getElementById('d' + i).classList.toggle('done', i <= n); } }
+
+  function addMessage(text, role) {
+    const messages = document.getElementById('messages');
+    const wrap = document.createElement('div'); wrap.className = 'msg ' + role;
+    const avatar = document.createElement('div'); avatar.className = 'msg-avatar ' + (role === 'ai' ? 'ai-avatar' : 'user-avatar');
+    avatar.textContent = role === 'ai' ? 'M' : (userName ? userName[0].toUpperCase() : 'Y');
+    const bubble = document.createElement('div'); bubble.className = 'msg-bubble';
+    bubble.innerHTML = text.replace(/\n/g, '<br>');
+    wrap.appendChild(avatar); wrap.appendChild(bubble); messages.appendChild(wrap);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function showTyping() {
+    const messages = document.getElementById('messages');
+    const wrap = document.createElement('div'); wrap.className = 'typing-wrap'; wrap.id = 'typingIndicator';
+    const avatar = document.createElement('div'); avatar.className = 'msg-avatar ai-avatar'; avatar.textContent = 'M';
+    const typing = document.createElement('div'); typing.className = 'typing';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    wrap.appendChild(avatar); wrap.appendChild(typing); messages.appendChild(wrap);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function removeTyping() { const t = document.getElementById('typingIndicator'); if (t) t.remove(); }
+
+  async function callClaude(messages) {
+    const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-opus-4-5', max_tokens: 1200, system: SYSTEM_PROMPT, messages }) });
+    const data = await response.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.content[0].text;
+  }
+
+  async function generateReport() {
+    const prompt = 'Based on this skin assessment, generate a complete personalized treatment plan report in HTML for The Nourish Skin Company. Use only h3, p, ul, li, strong tags. Warm, personal, approachable — sounds like Morgan wrote it. Only recommend from the Nourish service menu. Include a clear CTA to book at morgansylvia.glossgenius.com or call (919) 740-9799.\n\n' + conversationHistory.map(m => m.role.toUpperCase() + ': ' + m.content).join('\n\n');
+    const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ model: 'claude-opus-4-5', max_tokens: 2500, system: SYSTEM_PROMPT, messages: [{ role: 'user', content: prompt }] }) });
+    const data = await response.json();
+    return data.content[0].text;
+  }
+
+  function buildEmailHTML() {
+    return `<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body style="margin:0;padding:0;background:#FAF8F4;font-family:Georgia,serif;"><div style="max-width:600px;margin:0 auto;padding:40px 20px;"><div style="text-align:center;padding-bottom:24px;border-bottom:1px solid rgba(122,140,110,0.2);margin-bottom:28px;"><p style="font-size:24px;margin:0 0 8px;">🌿</p><p style="font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:#7A8C6E;margin:0 0 6px;">The Nourish Skin Company</p><h1 style="font-family:Georgia,serif;font-size:24px;font-weight:300;color:#2D2A26;margin:0;">Your Skin Treatment Plan</h1><p style="font-size:11px;color:#8A8278;margin:6px 0 0;">Personalized for ${userName || 'you'} by Morgan Sholley</p></div><div style="font-size:15px;line-height:1.85;color:#2D2A26;">${reportHTML}</div><div style="text-align:center;margin-top:28px;padding-top:24px;border-top:1px solid rgba(122,140,110,0.2);"><a href="https://morgansylvia.glossgenius.com/services" style="display:inline-block;padding:13px 32px;background:#7A8C6E;color:white;font-family:Arial,sans-serif;font-size:10px;letter-spacing:0.25em;text-transform:uppercase;text-decoration:none;font-weight:500;border-radius:2px;">Book with Morgan</a><p style="font-size:10px;color:#8A8278;margin-top:14px;">The Nourish Skin Company · 1240 SE Maynard Rd, Suite 102, Cary NC 27511</p><p style="font-size:10px;color:#8A8278;margin-top:4px;">(919) 740-9799 · morgan.sholley@gmail.com</p><p style="font-size:9px;color:#8A8278;margin-top:10px;line-height:1.6;">This assessment is for informational purposes only. All treatment decisions are made by Morgan in consultation with you.</p></div></div></body></html>`;
+  }
+
+  async function sendFromOverlay() {
+    const email = document.getElementById('reportUnlockEmail').value.trim();
+    const errorEl = document.getElementById('reportUnlockError');
+    const successEl = document.getElementById('reportUnlockSuccess');
+    const btn = document.getElementById('reportUnlockBtn');
+    errorEl.textContent = ''; successEl.textContent = '';
+    if (!email) { errorEl.textContent = 'Please enter your email address.'; return; }
+    if (!email.includes('@')) { errorEl.textContent = 'Please enter a valid email address.'; return; }
+    btn.textContent = 'Sending...'; btn.disabled = true;
+    try {
+      const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'send_email', email, subject: 'Your Nourish Skin Treatment Plan' + (userName ? ', ' + userName : ''), html: buildEmailHTML() }) });
+      const data = await response.json();
+      if (data.error) { errorEl.textContent = 'Something went wrong. Please try again.'; btn.textContent = 'Send My Treatment Plan'; btn.disabled = false; }
+      else { successEl.textContent = 'Sent! Check your inbox.'; btn.textContent = 'Sent ✓'; setTimeout(() => { document.getElementById('reportUnlockOverlay').style.display = 'none'; document.getElementById('reportBody').classList.remove('blurred'); }, 2500); }
+    } catch (err) { errorEl.textContent = 'Something went wrong. Please try again.'; btn.textContent = 'Send My Treatment Plan'; btn.disabled = false; }
+  }
+
+  async function sendReportEmail() {
+    const email = document.getElementById('emailCaptureInput').value.trim();
+    const errorEl = document.getElementById('emailError'); const successEl = document.getElementById('emailSuccess');
+    errorEl.textContent = ''; successEl.textContent = '';
+    if (!email) { errorEl.textContent = 'Please enter your email address.'; return; }
+    if (!email.includes('@')) { errorEl.textContent = 'Please enter a valid email address.'; return; }
+    const btn = document.querySelector('.email-send-btn'); btn.textContent = 'Sending...'; btn.disabled = true;
+    try {
+      const response = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'send_email', email, subject: 'Your Nourish Skin Treatment Plan' + (userName ? ', ' + userName : ''), html: buildEmailHTML() }) });
+      const data = await response.json();
+      if (data.error) { errorEl.textContent = 'Something went wrong. Please try again.'; btn.textContent = 'Send My Treatment Plan'; btn.disabled = false; }
+      else { successEl.textContent = 'Sent! Check your inbox.'; btn.textContent = 'Sent ✓'; }
+    } catch (err) { errorEl.textContent = 'Something went wrong. Please try again.'; btn.textContent = 'Send My Treatment Plan'; btn.disabled = false; }
+  }
+
+  async function sendAI(userMessage) {
+    if (userMessage) conversationHistory.push({ role: 'user', content: userMessage });
+    setInputEnabled(false); showTyping();
+    try {
+      const reply = await callClaude(conversationHistory);
+      removeTyping();
+      if (reply.includes('REPORT_READY')) {
+        const clean = reply.replace('REPORT_READY', '').trim();
+        addMessage(clean, 'ai'); conversationHistory.push({ role: 'assistant', content: reply }); updateProgress(6);
+        setTimeout(() => { show('generating'); startGeneratingAnimation(); generateAndShowReport(); }, 2200);
+      } else {
+        addMessage(reply, 'ai'); conversationHistory.push({ role: 'assistant', content: reply });
+        questionCount++; updateProgress(Math.min(questionCount, 5));
+        if (questionCount === 1) { const first = conversationHistory.find(m => m.role === 'user' && m.content !== 'Begin the skin assessment.'); if (first) { const w = first.content.trim().split(' '); if (w.length <= 3) userName = w[0]; } }
+        setInputEnabled(true); document.getElementById('userInput').focus();
+      }
+    } catch (err) {
+      removeTyping();
+      const messages = document.getElementById('messages');
+      const errWrap = document.createElement('div'); errWrap.className = 'msg ai'; errWrap.id = 'errorMsg';
+      const avatar = document.createElement('div'); avatar.className = 'msg-avatar ai-avatar'; avatar.textContent = 'M';
+      const bubble = document.createElement('div'); bubble.className = 'msg-bubble'; bubble.style.cssText = 'background:white;color:var(--charcoal);border-radius:0 12px 12px 12px;';
+      bubble.innerHTML = 'Something went wrong — tap Retry to continue.';
+      const retryBtn = document.createElement('button'); retryBtn.className = 'action-btn'; retryBtn.textContent = 'Retry'; retryBtn.style.marginTop = '10px'; retryBtn.style.display = 'block';
+      retryBtn.onclick = () => { const e = document.getElementById('errorMsg'); if (e) e.remove(); sendAI(userMessage); };
+      bubble.appendChild(retryBtn); errWrap.appendChild(avatar); errWrap.appendChild(bubble); messages.appendChild(errWrap);
+      messages.scrollTop = messages.scrollHeight; setInputEnabled(true);
+    }
+  }
+
+  async function generateAndShowReport() {
+    try {
+      const html = await generateReport();
+      reportHTML = html;
+      stopGeneratingAnimation();
+      await new Promise(r => setTimeout(r, 1200));
+      document.getElementById('reportName').textContent = userName || 'Your Report';
+      document.getElementById('reportTitle').textContent = 'Your Nourish Skin Treatment Plan';
+      document.getElementById('reportSub').textContent = 'Personalized for ' + (userName || 'you') + ' by Morgan · ' + new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+      document.getElementById('reportContent').innerHTML = '<div class="section-body">' + html + '</div>';
+      show('report');
+    } catch (err) {
+      stopGeneratingAnimation();
+      document.getElementById('reportContent').innerHTML = '<p style="color:var(--stone)">There was an issue generating your plan. Please try again.</p>';
+      show('report');
+    }
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('userInput'); const text = input.value.trim();
+    if (!text || isWaiting) return;
+    addMessage(text, 'user'); input.value = ''; input.style.height = 'auto'; sendAI(text);
+  }
+
+  function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
+  function autoResize(el) { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 100) + 'px'; }
+  function setInputEnabled(enabled) { isWaiting = !enabled; document.getElementById('sendBtn').disabled = !enabled; document.getElementById('userInput').disabled = !enabled; }
+</script>
+</body>
+</html>
